@@ -6,14 +6,19 @@
     "primary": "#1A73E8"
   },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Overview",
+        "group": "Getting Started",
         "pages": ["index"]
       },
       {
-        "tab": "API Reference",
-        "openapi": "openapi.json"
+        "group": "API Reference",
+        "openapi": "openapi.json",
+        "pages": [
+          "POST /v1/video/seedance-2",
+          "GET /v1/tasks",
+          "GET /v1/credits"
+        ]
       }
     ]
   },
