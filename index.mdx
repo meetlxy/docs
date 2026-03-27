@@ -1,97 +1,58 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: Seedance 2.0 API
+description: Create video generation tasks, check task status, and retrieve API credit balance.
 ---
 
-## Setting up
+## Overview
 
-Get your documentation site up and running in minutes.
+The Seedance 2.0 API provides endpoints to:
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+- Create asynchronous video generation tasks
+- Check task status and retrieve results
+- Check your current API credit balance
 
-## Make it yours
+## Authentication
 
-Design a docs site that looks great and empowers your users.
+Include your API key in the `Authorization` header for every request:
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+<CodeGroup>
+```http Authorization Header
+Authorization: Bearer <api_key>
+```
+</CodeGroup>
 
-## Create beautiful pages
+## Base URL
 
-Everything you need to create world-class documentation.
+<CodeGroup>
+```http Base URL
+https://your-api-domain.com
+```
+</CodeGroup>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Response Format
 
-## Need inspiration?
+All responses follow the same envelope:
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<CodeGroup>
+```json Response Envelope
+{
+  "code": 200,
+  "trace_id": "xxxxxx",
+  "message": null,
+  "data": {}
+}
+```
+</CodeGroup>
+
+## Available Endpoints
+
+- `POST /v1/video/seedance-2` — Create a video generation task
+- `GET /v1/tasks?task_id=<task_id>` — Retrieve task status and result
+- `GET /v1/credits` — Retrieve current API credit balance
+
+## Notes
+
+- Video generation is asynchronous
+- A successful create request returns a `task_id`
+- Use `task_id` to poll task status and retrieve the final result
+- Business-level failures may use the same `code` with different `message` values, so clients should inspect both `code` and `message`
