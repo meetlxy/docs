@@ -3,18 +3,16 @@
   "name": "Seedance 2.0 API",
   "theme": "mint",
   "colors": {
-    "primary": "#0F172A",
-    "light": "#334155",
-    "dark": "#E2E8F0"
+    "primary": "#1A73E8"
   },
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting Started",
+        "tab": "Overview",
         "pages": ["index"]
       },
       {
-        "group": "API Reference",
+        "tab": "API Reference",
         "openapi": "openapi.json"
       }
     ]
@@ -24,10 +22,6 @@
       {
         "label": "Overview",
         "href": "/index"
-      },
-      {
-        "label": "API Reference",
-        "href": "/api-reference"
       }
     ]
   },
