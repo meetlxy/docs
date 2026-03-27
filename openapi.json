@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://your-api-domain.com"
+      "url": "https://api.outai.top/"
     }
   ],
   "components": {
@@ -31,18 +31,26 @@
             "example": "45c30d76f06549b199a3775544523689"
           },
           "message": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "example": null
           }
         }
       },
       "CreateVideoTaskRequest": {
         "type": "object",
-        "required": ["prompt"],
+        "required": [
+          "prompt"
+        ],
         "properties": {
           "model": {
             "type": "string",
-            "enum": ["seedance_2_0", "seedance_2_0_fast"],
+            "enum": [
+              "seedance_2_0",
+              "seedance_2_0_fast"
+            ],
             "default": "seedance_2_0"
           },
           "prompt": {
@@ -51,12 +59,22 @@
           },
           "function_mode": {
             "type": "string",
-            "enum": ["first_last_frames", "omni_reference"],
+            "enum": [
+              "first_last_frames",
+              "omni_reference"
+            ],
             "default": "omni_reference"
           },
           "ratio": {
             "type": "string",
-            "enum": ["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"],
+            "enum": [
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ],
             "default": "16:9"
           },
           "duration": {
@@ -135,16 +153,25 @@
         "type": "object",
         "properties": {
           "video_url": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri",
             "example": "https://example.com/output.mp4"
           },
           "error_message": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "example": null
           },
           "finished_at": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           }
         }
@@ -158,7 +185,11 @@
           },
           "status": {
             "type": "string",
-            "enum": ["running", "succeeded", "failed"]
+            "enum": [
+              "running",
+              "succeeded",
+              "failed"
+            ]
           },
           "model": {
             "type": "string",
