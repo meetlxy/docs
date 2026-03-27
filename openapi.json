@@ -12,13 +12,7 @@
   ],
   "tags": [
     {
-      "name": "Video"
-    },
-    {
-      "name": "Tasks"
-    },
-    {
-      "name": "Credits"
+      "name": "API"
     }
   ],
   "components": {
@@ -104,7 +98,7 @@
             "default": []
           }
         },
-        "description": "Validation notes: prompt is required; when function_mode=first_last_frames, at most 2 images are allowed; when function_mode=omni_reference, audio-only input is not allowed, so if audio_urls is provided, include at least one image or video."
+        "description": "Validation notes: prompt is required; model, ratio, and function_mode must use supported values; duration must be between 4 and 15; when function_mode=first_last_frames, at most 2 images are allowed; when function_mode=omni_reference, audio-only input is not allowed, so if audio_urls is provided, include at least one image or video."
       },
       "CreateVideoTaskData": {
         "type": "object",
@@ -264,7 +258,7 @@
     "/v1/video/seedance-2": {
       "post": {
         "operationId": "createVideoTask",
-        "tags": ["Video"],
+        "tags": ["API"],
         "summary": "Create video task",
         "description": "Creates an asynchronous Seedance 2.0 video generation task.",
         "security": [
@@ -352,7 +346,7 @@
     "/v1/tasks": {
       "get": {
         "operationId": "getTaskStatus",
-        "tags": ["Tasks"],
+        "tags": ["API"],
         "summary": "Get task status",
         "description": "Returns the current task status and the final result when available.",
         "security": [
@@ -398,7 +392,7 @@
     "/v1/credits": {
       "get": {
         "operationId": "getCredits",
-        "tags": ["Credits"],
+        "tags": ["API"],
         "summary": "Check API credits",
         "description": "Returns the current API credit balance for the authenticated user.",
         "security": [
