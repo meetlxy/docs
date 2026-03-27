@@ -1,216 +1,433 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Seedance 2.0 API",
+    "version": "1.0.0",
+    "description": "API for creating Seedance 2.0 video tasks, checking task status, and retrieving API credit balance."
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://your-api-domain.com"
     }
   ],
-  "security": [
+  "tags": [
     {
-      "bearerAuth": []
+      "name": "Video"
+    },
+    {
+      "name": "Tasks"
+    },
+    {
+      "name": "Credits"
     }
   ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key"
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
-      }
-    }
-  },
-  "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "EnvelopeBase": {
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
+          "code": {
+            "type": "integer",
+            "example": 200
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+          "trace_id": {
+            "type": "string",
+            "example": "45c30d76f06549b199a3775544523689"
+          },
+          "message": {
+            "type": ["string", "null"],
+            "example": null
           }
         }
       },
-      "NewPlant": {
+      "CreateVideoTaskRequest": {
+        "type": "object",
+        "required": ["prompt"],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": ["seedance_2_0", "seedance_2_0_fast"],
+            "default": "seedance_2_0"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt for video generation."
+          },
+          "function_mode": {
+            "type": "string",
+            "enum": ["first_last_frames", "omni_reference"],
+            "default": "omni_reference"
+          },
+          "ratio": {
+            "type": "string",
+            "enum": ["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"],
+            "default": "16:9"
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 4,
+            "maximum": 15,
+            "default": 5
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 9,
+            "default": []
+          },
+          "audio_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3,
+            "default": []
+          },
+          "video_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3,
+            "default": []
+          }
+        },
+        "description": "Validation notes: prompt is required; when function_mode=first_last_frames, at most 2 images are allowed; when function_mode=omni_reference, audio-only input is not allowed, so if audio_urls is provided, include at least one image or video."
+      },
+      "CreateVideoTaskData": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "example": "task_id"
+          },
+          "status": {
+            "type": "string",
+            "example": "running"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "credits_cost": {
+            "type": "number",
+            "example": 12.0
+          }
+        }
+      },
+      "CreateVideoTaskResponse": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Plant"
+            "$ref": "#/components/schemas/EnvelopeBase"
           },
           {
-            "required": [
-              "id"
-            ],
             "type": "object",
             "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+              "data": {
+                "$ref": "#/components/schemas/CreateVideoTaskData"
               }
             }
           }
         ]
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "TaskResult": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "video_url": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "example": "https://example.com/output.mp4"
           },
-          "message": {
-            "type": "string"
+          "error_message": {
+            "type": ["string", "null"],
+            "example": null
+          },
+          "finished_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskData": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "example": "task_id"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["running", "succeeded", "failed"]
+          },
+          "model": {
+            "type": "string",
+            "example": "seedance_2_0"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "credits_cost": {
+            "type": "number",
+            "example": 12.0
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TaskResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "GetTaskResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EnvelopeBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/TaskData"
+              }
+            }
+          }
+        ]
+      },
+      "CreditsData": {
+        "type": "object",
+        "properties": {
+          "api_available_credits": {
+            "type": "number",
+            "example": 47995.0
+          },
+          "api_total_credits": {
+            "type": "number",
+            "example": 51000.0
+          }
+        }
+      },
+      "CreditsResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EnvelopeBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/CreditsData"
+              }
+            }
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EnvelopeBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "null",
+                "example": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/v1/video/seedance-2": {
+      "post": {
+        "operationId": "createVideoTask",
+        "tags": ["Video"],
+        "summary": "Create video task",
+        "description": "Creates an asynchronous Seedance 2.0 video generation task.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVideoTaskRequest"
+              },
+              "example": {
+                "model": "seedance_2_0",
+                "prompt": "A futuristic city at sunset",
+                "function_mode": "omni_reference",
+                "ratio": "16:9",
+                "duration": 5,
+                "image_urls": [],
+                "audio_urls": [],
+                "video_urls": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateVideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "value": {
+                      "code": 400,
+                      "trace_id": "45c30d76f06549b199a3775544515689",
+                      "message": "Detailed error message",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Business-level failure",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "insufficient_credits": {
+                    "value": {
+                      "code": 300111,
+                      "trace_id": "45c30d76f06549b199a3775544515689",
+                      "message": "Insufficient API credits"
+                    }
+                  },
+                  "parallel_limit": {
+                    "value": {
+                      "code": 300111,
+                      "trace_id": "45c30d76f06549b199a3775544515689",
+                      "message": "Parallel task limit reached."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "/v1/tasks": {
+      "get": {
+        "operationId": "getTaskStatus",
+        "tags": ["Tasks"],
+        "summary": "Get task status",
+        "description": "Returns the current task status and the final result when available.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The task_id returned by the create task endpoint."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/credits": {
+      "get": {
+        "operationId": "getCredits",
+        "tags": ["Credits"],
+        "summary": "Check API credits",
+        "description": "Returns the current API credit balance for the authenticated user.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Credits retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
