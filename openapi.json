@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.outai.top/"
+      "url": "https://api.outai.top/api"
     }
   ],
   "components": {
