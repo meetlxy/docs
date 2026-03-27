@@ -10,11 +10,6 @@
       "url": "https://your-api-domain.com"
     }
   ],
-  "tags": [
-    {
-      "name": "API"
-    }
-  ],
   "components": {
     "securitySchemes": {
       "bearerAuth": {
@@ -258,7 +253,6 @@
     "/v1/video/seedance-2": {
       "post": {
         "operationId": "createVideoTask",
-        "tags": ["API"],
         "summary": "Create video task",
         "description": "Creates an asynchronous Seedance 2.0 video generation task.",
         "security": [
@@ -346,7 +340,6 @@
     "/v1/tasks": {
       "get": {
         "operationId": "getTaskStatus",
-        "tags": ["API"],
         "summary": "Get task status",
         "description": "Returns the current task status and the final result when available.",
         "security": [
@@ -392,7 +385,6 @@
     "/v1/credits": {
       "get": {
         "operationId": "getCredits",
-        "tags": ["API"],
         "summary": "Check API credits",
         "description": "Returns the current API credit balance for the authenticated user.",
         "security": [
